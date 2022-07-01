@@ -46,7 +46,7 @@ struct Heap<T: Comparable> {
             if rightChildIndex >= heap.count {
                 return heap[leftChildIndex] > heap[poppedIndex] ? .left : .none
             }
-            if heap[leftChildIndex] < heap[poppedIndex] && heap[rightChildIndex] < heap[poppedIndex] {
+            if heap[leftChildIndex] <= heap[poppedIndex] && heap[rightChildIndex] <= heap[poppedIndex] {
                 return .none
             }
             if heap[leftChildIndex] > heap[poppedIndex] && heap[rightChildIndex] > heap[poppedIndex] {
