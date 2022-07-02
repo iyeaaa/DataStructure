@@ -1,21 +1,25 @@
 struct Queue<T> {
     private var queue: [T]
-    private var lf = 0, ryt = 0
+    private var lf = 0, ryt = -1
 
     init() { queue = [T](); }
-    init(_ n: T) { queue = [n]; }
+    init(_ n: T) { queue = [n]; ryt += 1 }
     init(_ n: [T]) { queue = n; ryt = n.count-1 }
 
     var isEmpty: Bool {
         ryt < lf
     }
-    
+
     var count: Int {
         isEmpty ? 0 : ryt-lf+1
     }
 
     var first: T? {
         queue[lf]
+    }
+
+    var last: T? {
+        queue[ryt]
     }
 
     func get(index: Int) -> T? {
