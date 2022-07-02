@@ -36,4 +36,5 @@ struct Queue<T> {
 // 스택은 구현 필요 x
 // removeFirst()의 O(n)을 해결
 // reversed로 구현시 생기는 removeAll()의 O(n)을 해결
+// 메모리 소모량은 증가
 // 이게 제일 빠르지 않을까?
