@@ -27,6 +27,10 @@ struct Queue<T> {
         defer { lf += 1 }
         return queue[lf]
     }
+    
+    mutating func removeFirst() {
+        lf += 1
+    }
 }
 
 // 스택은 구현 필요 x
