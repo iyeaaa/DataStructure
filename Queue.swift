@@ -1,12 +1,17 @@
 struct Queue<T> {
     private var queue: [T]
-    private var lf = 0, ryt = -1
+    private var lf = 0, ryt = 0
 
-    init() { queue = [T]() }
+    init() { queue = [T](); }
+    init(_ n: T) { queue = [n]; }
     init(_ n: [T]) { queue = n; ryt = n.count-1 }
 
     var isEmpty: Bool {
         ryt < lf
+    }
+    
+    var count: Int {
+        isEmpty ? 0 : ryt-lf+1
     }
 
     var first: T? {
@@ -27,11 +32,12 @@ struct Queue<T> {
         defer { lf += 1 }
         return queue[lf]
     }
-    
+
     mutating func removeFirst() {
         lf += 1
     }
 }
+
 
 // 스택은 구현 필요 x
 // removeFirst()의 O(n)을 해결
