@@ -37,4 +37,5 @@ struct Queue<T> {
 // removeFirst()의 O(n)을 해결
 // reversed로 구현시 생기는 removeAll()의 O(n)을 해결
 // 메모리 소모량은 증가
+// 문제 풀 때에 기본 자료구조에 이상한 기능 추가하는 짓은 자제하자
 // 이게 제일 빠르지 않을까?
