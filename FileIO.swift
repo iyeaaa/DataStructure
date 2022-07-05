@@ -1,14 +1,18 @@
-final class FileIO {
-    private var buffer:[UInt8]
-    private var index: Int
+final class IO {
+    private let buffer:[UInt8]
+    private var index: Int = 0
+
     init(fileHandle: FileHandle = FileHandle.standardInput) {
-        buffer = Array(fileHandle.readDataToEndOfFile())+[UInt8(0)] // 인덱스 범위 넘어가는 것 방지
-        index = 0
+
+        buffer = Array(try! fileHandle.readToEnd()!)+[UInt8(0)] // 인덱스 범위 넘어가는 것 방지
     }
+
     @inline(__always) private func read() -> UInt8 {
         defer { index += 1 }
+
         return buffer[index]
     }
+
     @inline(__always) func readInt() -> Int {
         var sum = 0
         var now = read()
@@ -17,25 +21,37 @@ final class FileIO {
         while now == 10
                       || now == 32 { now = read() } // 공백과 줄바꿈 무시
         if now == 45 { isPositive.toggle(); now = read() } // 음수 처리
-        while 48...57 ~= now {
+        while now >= 48, now <= 57 {
             sum = sum * 10 + Int(now-48)
             now = read()
         }
 
         return sum * (isPositive ? 1:-1)
     }
+
     @inline(__always) func readString() -> String {
-        var str = ""
         var now = read()
 
-        while now == 10
-                      || now == 32 { now = read() } // 공백과 줄바꿈 무시
-        while now != 10
-                      && now != 32 && now != 0 {
-            str += String(bytes: [now], encoding: .ascii)!
-            now = read()
-        }
+        while now == 10 || now == 32 { now = read() } // 공백과 줄바꿈 무시
+        let beginIndex = index-1
 
-        return str
+        while now != 10,
+              now != 32,
+              now != 0 { now = read() }
+
+        return String(bytes: Array(buffer[beginIndex..<(index-1)]), encoding: .ascii)!
+    }
+
+    @inline(__always) func readByteSequenceWithoutSpaceAndLineFeed() -> [UInt8] {
+        var now = read()
+
+        while now == 10 || now == 32 { now = read() } // 공백과 줄바꿈 무시
+        let beginIndex = index-1
+
+        while now != 10,
+              now != 32,
+              now != 0 { now = read() }
+
+        return Array(buffer[beginIndex..<(index-1)])
     }
 }
