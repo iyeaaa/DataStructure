@@ -54,4 +54,8 @@ final class IO {
 
         return Array(buffer[beginIndex..<(index-1)])
     }
+    
+    @inline(__always) func writeByString(_ output: String) { // wapas
+        FileHandle.standardOutput.write(output.data(using: .utf8)!)
+    }
 }
