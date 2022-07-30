@@ -28,8 +28,7 @@ struct Heap<T: Comparable> {
         let returnData = heap.popLast()!
 
         func moveDown(_ pop: Int) -> Direction {
-            let lf = pop * 2
-            let ryt = lf + 1
+            let lf = pop * 2, ryt = lf+1
             if lf >= heap.count {
                 return .none
             }
