@@ -1,76 +1,64 @@
+
 struct Heap<T: Comparable> {
     var heap = [T]()
 
     init() { }
-    init(_ data: T) {
-        heap.append(data)
-        heap.append(data)
-    }
+    init(_ data: T) { heap.append(data); heap.append(data) }
+
+    var isEmpty: Bool { heap.count <= 1 }
+
+    var first: T? { isEmpty ? nil : heap[1] }
 
     mutating func insert(_ data: T) {
-        if heap.count == 0 {
-            heap.append(data)
-            heap.append(data)
-            return
-        }
         heap.append(data)
+        if isEmpty { heap.append(data)}
 
-        func isMoveUp(_ insertIndex: Int) -> Bool {
-            if insertIndex <= 1 { return false }
-            let parentIndex = insertIndex / 2
-            return heap[insertIndex] > heap[parentIndex]
-        }
-
-        var insertIndex = heap.count - 1
-        while isMoveUp(insertIndex) {
-            let parentIndex = insertIndex / 2
-            heap.swapAt(insertIndex, parentIndex)
-            insertIndex = parentIndex
+        var isrtIdx = heap.count - 1
+        while isrtIdx >= 1 && heap[isrtIdx/2] < heap[isrtIdx] {
+            heap.swapAt(isrtIdx, isrtIdx/2)
+            isrtIdx = isrtIdx/2
         }
     }
 
-    enum moveDownStatus { case none, left, right }
+    enum Direction { case none, lf, ryt }
     mutating func pop() -> T? {
-        if heap.count <= 1 { return nil }
+        if isEmpty { return nil }
 
-        let returnData = heap[1]
         heap.swapAt(1, heap.count-1)
-        heap.removeLast()
+        let returnData = heap.popLast()!
 
-        func moveDown(_ poppedIndex: Int) -> moveDownStatus {
-            let leftChildIndex = poppedIndex * 2
-            let rightChildIndex = leftChildIndex + 1
-            if leftChildIndex >= heap.count {
+        func moveDown(_ pop: Int) -> Direction {
+            let lf = pop * 2
+            let ryt = lf + 1
+            if lf >= heap.count {
                 return .none
             }
-            if rightChildIndex >= heap.count {
-                return heap[leftChildIndex] > heap[poppedIndex] ? .left : .none
+            if ryt >= heap.count {
+                return heap[lf] > heap[pop] ? .lf : .none
             }
-            if heap[leftChildIndex] <= heap[poppedIndex] && heap[rightChildIndex] <= heap[poppedIndex] {
+            if heap[lf] <= heap[pop] && heap[ryt] <= heap[pop] {
                 return .none
             }
-            if heap[leftChildIndex] > heap[poppedIndex] && heap[rightChildIndex] > heap[poppedIndex] {
-                return heap[leftChildIndex] > heap[rightChildIndex] ? .left : .right
+            if heap[lf] > heap[pop] && heap[ryt] > heap[pop] {
+                return heap[lf] > heap[ryt] ? .lf : .ryt
             }
-            return heap[leftChildIndex] > heap[poppedIndex] ? .left : .right
+            return heap[lf] > heap[pop] ? .lf : .ryt
         }
 
-        var poppedIndex = 1
+        var pop = 1
         while true {
-            switch moveDown(poppedIndex) {
+            switch moveDown(pop) {
             case .none:
                 return returnData
-            case .left:
-                let leftChildIndex = poppedIndex * 2
-                heap.swapAt(poppedIndex, leftChildIndex)
-                poppedIndex = leftChildIndex
-            case .right:
-                let rightChildIndex = poppedIndex*2 + 1
-                heap.swapAt(poppedIndex, rightChildIndex)
-                poppedIndex = rightChildIndex
+            case .lf:
+                let chl = pop * 2
+                heap.swapAt(pop, chl)
+                pop = chl
+            case .ryt:
+                let chl = pop*2 + 1
+                heap.swapAt(pop, chl)
+                pop = chl
             }
         }
     }
 }
-
-// 개발자 소들이의 소스코드에서 약간의 오류수정, 간결화, 최적화한 코드
