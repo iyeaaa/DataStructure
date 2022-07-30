@@ -14,7 +14,7 @@ struct Heap<T: Comparable> {
         if isEmpty { heap.append(data)}
 
         var isrtIdx = heap.count - 1
-        while isrtIdx >= 1 && heap[isrtIdx/2] < heap[isrtIdx] {
+        while isrtIdx >= 1 && heap[isrtIdx/2] > heap[isrtIdx] {
             heap.swapAt(isrtIdx, isrtIdx/2)
             isrtIdx = isrtIdx/2
         }
@@ -28,21 +28,20 @@ struct Heap<T: Comparable> {
         let returnData = heap.popLast()!
 
         func moveDown(_ pop: Int) -> Direction {
-            let lf = pop * 2
-            let ryt = lf + 1
+            let lf = pop * 2, ryt = lf+1
             if lf >= heap.count {
                 return .none
             }
             if ryt >= heap.count {
-                return heap[lf] > heap[pop] ? .lf : .none
+                return heap[lf] < heap[pop] ? .lf : .none
             }
-            if heap[lf] <= heap[pop] && heap[ryt] <= heap[pop] {
+            if heap[lf] >= heap[pop] && heap[ryt] >= heap[pop] {
                 return .none
             }
-            if heap[lf] > heap[pop] && heap[ryt] > heap[pop] {
-                return heap[lf] > heap[ryt] ? .lf : .ryt
+            if heap[lf] < heap[pop] && heap[ryt] < heap[pop] {
+                return heap[lf] < heap[ryt] ? .lf : .ryt
             }
-            return heap[lf] > heap[pop] ? .lf : .ryt
+            return heap[lf] < heap[pop] ? .lf : .ryt
         }
 
         var pop = 1
