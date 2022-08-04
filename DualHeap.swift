@@ -117,6 +117,34 @@ struct DualHeap<T: Comparable & Hashable> {
 
     init(){}
 
+    mutating func maxFirst() -> T? {
+        while let top = maxHeap.first {
+            if count[top, default: 0] > 0 {
+                break
+            }
+            count.removeValue(forKey: top)
+            _ = maxHeap.pop()
+        }
+        if maxHeap.isEmpty {
+            return nil
+        }
+        return maxHeap.first
+    }
+
+    mutating func minFirst() -> T? {
+        while let top = minHeap.first {
+            if count[top, default: 0] > 0 {
+                break
+            }
+            count.removeValue(forKey: top)
+            _ = minHeap.pop()
+        }
+        if minHeap.isEmpty {
+            return nil
+        }
+        return minHeap.first
+    }
+
     mutating func isEmpty() -> Bool {
         while let top = maxHeap.first {
             if count[top, default: 0] > 0 {
@@ -169,5 +197,9 @@ struct DualHeap<T: Comparable & Hashable> {
         }
         count[minHeap.first!, default: 0] -= 1
         return minHeap.pop()
+    }
+
+    mutating func remove(_ h: T) {
+        count[h, default: 0] -= 1
     }
 }
