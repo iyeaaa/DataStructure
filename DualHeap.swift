@@ -111,13 +111,13 @@ struct DualHeap<T: Comparable & Hashable> {
         }
     }
 
-    var maxHeap = MaxHeap<T>()
-    var minHeap = MinHeap<T>()
-    var count = [T: Int]()
+    private var maxHeap = MaxHeap<T>()
+    private var minHeap = MinHeap<T>()
+    private var count = [T: Int]()
 
     init(){}
 
-    mutating func maxFirst() -> T? {
+    private mutating func rmvUsed() {
         while let top = maxHeap.first {
             if count[top, default: 0] > 0 {
                 break
@@ -125,41 +125,27 @@ struct DualHeap<T: Comparable & Hashable> {
             count.removeValue(forKey: top)
             _ = maxHeap.pop()
         }
-        if maxHeap.isEmpty {
-            return nil
+        while let top = minHeap.first {
+            if count[top, default: 0] > 0 {
+                break
+            }
+            count.removeValue(forKey: top)
+            _ = minHeap.pop()
         }
+    }
+
+    mutating func maxFirst() -> T? {
+        rmvUsed()
         return maxHeap.first
     }
 
     mutating func minFirst() -> T? {
-        while let top = minHeap.first {
-            if count[top, default: 0] > 0 {
-                break
-            }
-            count.removeValue(forKey: top)
-            _ = minHeap.pop()
-        }
-        if minHeap.isEmpty {
-            return nil
-        }
+        rmvUsed()
         return minHeap.first
     }
 
     mutating func isEmpty() -> Bool {
-        while let top = maxHeap.first {
-            if count[top, default: 0] > 0 {
-                break
-            }
-            count.removeValue(forKey: top)
-            _ = maxHeap.pop()
-        }
-        while let top = minHeap.first {
-            if count[top, default: 0] > 0 {
-                break
-            }
-            count.removeValue(forKey: top)
-            _ = minHeap.pop()
-        }
+        rmvUsed()
         return maxHeap.isEmpty
     }
 
@@ -170,31 +156,13 @@ struct DualHeap<T: Comparable & Hashable> {
     }
 
     mutating func maxPop() -> T? {
-        while let top = maxHeap.first {
-            if count[top, default: 0] > 0 {
-                break
-            }
-            count.removeValue(forKey: top)
-            _ = maxHeap.pop()
-        }
-        if maxHeap.isEmpty {
-            return nil
-        }
+        rmvUsed()
         count[maxHeap.first!, default: 0] -= 1
         return maxHeap.pop()
     }
 
     mutating func minPop() -> T? {
-        while let top = minHeap.first {
-            if count[top, default: 0] > 0 {
-                break
-            }
-            count.removeValue(forKey: top)
-            _ = minHeap.pop()
-        }
-        if minHeap.isEmpty {
-            return nil
-        }
+        rmvUsed()
         count[minHeap.first!, default: 0] -= 1
         return minHeap.pop()
     }
