@@ -157,12 +157,14 @@ struct DualHeap<T: Comparable & Hashable> {
 
     mutating func maxPop() -> T? {
         rmvUsed()
+        if isEmpty() { return nil }
         count[maxHeap.first!, default: 0] -= 1
         return maxHeap.pop()
     }
 
     mutating func minPop() -> T? {
         rmvUsed()
+        if isEmpty() { return nil }
         count[minHeap.first!, default: 0] -= 1
         return minHeap.pop()
     }
