@@ -1,2 +1,1 @@
-# DataStructure
-Data Structure made of Swift
+제가 Swift 언어로 구현해본 자료구조의 일부와 제가 기억하기 위해 가져온 자료구조를 저장해 놓았습니다.
